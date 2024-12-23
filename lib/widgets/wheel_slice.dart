@@ -5,11 +5,7 @@ import 'package:fortune_wheel/painters/wheel_slice_painter.dart';
 import 'package:fortune_wheel/widgets/fortune_wheel.dart';
 
 class WheelSlice extends StatelessWidget {
-  WheelSlice({
-    required this.index,
-    required this.size,
-    required this.fortuneWheelChildren
-  });
+  WheelSlice({required this.index, required this.size, required this.fortuneWheelChildren});
 
   final int index;
   final double size;
@@ -25,7 +21,7 @@ class WheelSlice extends StatelessWidget {
     return Stack(
       children: [
         _getSliceBackground(pieceAngle, childCount),
-        _getSliceForeground(pieceAngle, pieceWidth, pieceHeight)
+        _getSliceForeground(pieceAngle, pieceWidth, pieceHeight),
       ],
     );
   }
@@ -40,10 +36,10 @@ class WheelSlice extends StatelessWidget {
       child: Stack(
         children: [
           Positioned(
-            top: size / 2,
+            top: size / 1.6,
             left: size / 2 - pieceWidth / 2,
             child: Container(
-              padding: EdgeInsets.all(size / fortuneWheelChildren.length / 4),
+              padding: EdgeInsets.all(4),
               height: pieceHeight,
               width: pieceWidth,
               child: FittedBox(
@@ -51,10 +47,10 @@ class WheelSlice extends StatelessWidget {
                 alignment: Alignment.center,
                 child: Transform.rotate(
                   angle: -pieceAngle - leftRotationOffset * 2,
-                  child: fortuneWheelChildren[index].foreground
-                )
+                  child: fortuneWheelChildren[index].foreground,
+                ),
               ),
-            )
+            ),
           ),
         ],
       ),
@@ -74,7 +70,7 @@ class WheelSlice extends StatelessWidget {
               painter: WheelSlicePainter(
                 divider: childCount,
                 number: index,
-                color: fortuneWheelChildren[index].background
+                color: Colors.white.withOpacity(0.04),
               ),
               size: Size(size, size),
             ),

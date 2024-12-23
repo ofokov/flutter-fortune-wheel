@@ -1,55 +1,111 @@
-import 'package:flutter/material.dart';
 import 'dart:math';
+
+import 'package:flutter/material.dart';
 
 class WheelSlicePainter extends CustomPainter {
   WheelSlicePainter({
     required this.divider,
     required this.number,
-    required this.color
+    required this.color,
+    this.gapAngle = 0.05, // Default gap angle in radians
   });
 
   final int divider;
   final int number;
   final Color? color;
-  
+  final double gapAngle; // Gap angle between slices
+
   Paint? currentPaint;
   double angleWidth = 0;
 
   @override
   void paint(Canvas canvas, Size size) {
+    angleWidth = (pi * 2 / divider) - gapAngle; // Adjust angle to include gap
+
+    // Paint the filled arc
     _initializeFill();
-    _drawSlice(canvas, size);
+    _drawClippedSlice(canvas, size);
+
+    // Paint the bottom border only
     _initializeStroke();
-    _drawSlice(canvas, size);
+    _drawBottomBorder(canvas, size);
   }
 
   void _initializeStroke() {
     currentPaint = Paint()
-    ..color = Colors.white.withOpacity(0.2)
-    ..strokeWidth = 2
-    ..style = PaintingStyle.stroke;
+      ..color = Colors.white.withOpacity(0.3)
+      ..strokeWidth = 2
+      ..style = PaintingStyle.stroke;
   }
 
   void _initializeFill() {
-    currentPaint = Paint()..color = color != null
-      ? color!
-      : Color.lerp(Colors.red, Colors.orange, number / (divider -1))!;
-    
-    angleWidth = pi * 2 / divider;
+    currentPaint = Paint()
+      ..color = color != null ? color! : Color.lerp(Colors.red, Colors.orange, number / (divider - 1))!
+      ..style = PaintingStyle.fill;
   }
 
-  void _drawSlice(Canvas canvas, Size size) {
-    canvas.drawArc(
-      Rect.fromCenter(
-        center: Offset(size.width / 2, size.height / 2),
-        height: size.height,
-        width: size.width,
-      ),
-      0,
-      angleWidth,
-      true,
-      currentPaint!,
-    );
+  void _drawClippedSlice(Canvas canvas, Size size) {
+    final radius = size.width / 2;
+
+    // Define paths for the outer and inner arcs
+    Path path = Path()
+      ..moveTo(
+        size.width / 2 + radius * cos(gapAngle / 2),
+        size.height / 2 + radius * sin(gapAngle / 2),
+      )
+      ..arcTo(
+        Rect.fromCircle(center: Offset(size.width / 2, size.height / 2), radius: radius),
+        gapAngle / 2,
+        angleWidth,
+        false,
+      )
+      ..lineTo(
+        size.width / 2 + radius * 0.5 * cos(angleWidth + gapAngle / 2),
+        size.height / 2 + radius * 0.5 * sin(angleWidth + gapAngle / 2),
+      )
+      ..arcTo(
+        Rect.fromCircle(center: Offset(size.width / 2, size.height / 2), radius: radius * 0.5),
+        angleWidth + gapAngle / 2,
+        -angleWidth,
+        false,
+      )
+      ..close();
+
+    canvas.drawPath(path, currentPaint!);
+  }
+
+  void _drawBottomBorder(Canvas canvas, Size size) {
+    final radius = size.width / 2;
+    final innerRadius = radius * 0.5;
+
+    // Define the bottom border path
+    Path borderPath = Path()
+      ..moveTo(
+        size.width / 2 + innerRadius * cos(gapAngle / 2),
+        size.height / 2 + innerRadius * sin(gapAngle / 2),
+      )
+      ..lineTo(
+        size.width / 2 + radius * cos(gapAngle / 2),
+        size.height / 2 + radius * sin(gapAngle / 2),
+      )
+      ..arcTo(
+        Rect.fromCircle(center: Offset(size.width / 2, size.height / 2), radius: radius),
+        gapAngle / 2,
+        angleWidth,
+        false,
+      )
+      ..lineTo(
+        size.width / 2 + innerRadius * cos(angleWidth + gapAngle / 2),
+        size.height / 2 + innerRadius * sin(angleWidth + gapAngle / 2),
+      )
+      ..arcTo(
+        Rect.fromCircle(center: Offset(size.width / 2, size.height / 2), radius: innerRadius),
+        angleWidth + gapAngle / 2,
+        -angleWidth,
+        false,
+      );
+
+    canvas.drawPath(borderPath, currentPaint!);
   }
 
   @override
