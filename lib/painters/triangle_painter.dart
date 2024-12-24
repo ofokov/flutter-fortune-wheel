@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 
 class TrianglePainter extends CustomPainter {
   final Color fillColor;
+  final double topRadius;
 
   TrianglePainter({
     this.fillColor = Colors.black,
+    this.topRadius = 20.0, // Default radius for the rounded top corner
   });
 
   @override

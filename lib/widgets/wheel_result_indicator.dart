@@ -9,9 +9,11 @@ class WheelResultIndicator extends StatelessWidget {
     required this.wheelSize,
     required this.animationController,
     required this.childCount,
+    this.onTap,
   });
 
   final double wheelSize;
+  final VoidCallback? onTap;
   final AnimationController animationController;
   final int childCount;
 
@@ -20,11 +22,15 @@ class WheelResultIndicator extends StatelessWidget {
     double indicatorSize = wheelSize * 0.29;
     Color indicatorColor = const Color(0xFF8942FE);
 
-    return Stack(
-      children: [
-        _getCenterIndicatorTriangle(wheelSize, indicatorSize * .8, Colors.white),
-        _getCenterIndicatorCircle(indicatorColor, indicatorSize),
-      ],
+    return GestureDetector(
+      behavior: HitTestBehavior.opaque,
+      onTap: onTap,
+      child: Stack(
+        children: [
+          _getCenterIndicatorTriangle(wheelSize, indicatorSize * .75, Colors.white),
+          _getCenterIndicatorCircle(indicatorColor, indicatorSize),
+        ],
+      ),
     );
   }
 
@@ -62,7 +68,7 @@ class WheelResultIndicator extends StatelessWidget {
           ),
           boxShadow: [
             BoxShadow(
-              color: Color(0x668942FE),
+              color: indicatorColor.withOpacity(0.6),
               offset: Offset(0, 6),
               blurRadius: 60,
               spreadRadius: 6,

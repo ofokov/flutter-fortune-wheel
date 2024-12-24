@@ -43,36 +43,36 @@ class _DemoScreenState extends State<DemoScreen> {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                SizedBox(
-                  height: 24,
-                ),
+                SizedBox(height: 24),
                 Container(
                   height: 80,
                   width: 80,
                   child: currentWheelChild != null ? currentWheelChild!.foreground : Container(),
                 ),
+                SizedBox(height: 16),
                 SizedBox(
-                  height: 16,
+                  width: 350,
+                  height: 350,
+                  child: FortuneWheel<int>(
+                    controller: fortuneWheelController,
+                    onTapIndicator: () {
+                      fortuneWheelController.rotateTheWheel();
+                    },
+                    children: [
+                      _createFortuneWheelChild(-50),
+                      _createFortuneWheelChild(1000),
+                      _createFortuneWheelChild(-50),
+                      _createFortuneWheelChild(-500),
+                      _createFortuneWheelChild(1000),
+                      _createFortuneWheelChild(-100),
+                      _createFortuneWheelChild(-100),
+                      _createFortuneWheelChild(100),
+                      _createFortuneWheelChild(-100),
+                      _createFortuneWheelChild(1000),
+                      _createFortuneWheelChild(-100),
+                    ],
+                  ),
                 ),
-                SizedBox(
-                    width: 350,
-                    height: 350,
-                    child: FortuneWheel<int>(
-                      controller: fortuneWheelController,
-                      children: [
-                        _createFortuneWheelChild(-50),
-                        _createFortuneWheelChild(1000),
-                        _createFortuneWheelChild(-50),
-                        _createFortuneWheelChild(-500),
-                        _createFortuneWheelChild(1000),
-                        _createFortuneWheelChild(-100),
-                        _createFortuneWheelChild(-100),
-                        _createFortuneWheelChild(100),
-                        _createFortuneWheelChild(-100),
-                        _createFortuneWheelChild(1000),
-                        _createFortuneWheelChild(-100),
-                      ],
-                    )),
                 SizedBox(height: 24),
                 ElevatedButton(
                     onPressed: () => fortuneWheelController.rotateTheWheel(),
@@ -96,7 +96,10 @@ class _DemoScreenState extends State<DemoScreen> {
     String verb = value.isNegative ? 'Lose' : 'Win';
     int valueString = value.abs();
 
-    return FortuneWheelChild(foreground: _getWheelContentCircle(color, '$verb\n$valueString €'), value: value);
+    return FortuneWheelChild(
+      foreground: _getWheelContentCircle(color, '$verb\n$valueString €'),
+      value: value,
+    );
   }
 
   Container _getWheelContentCircle(Color backgroundColor, String text) {
@@ -105,18 +108,11 @@ class _DemoScreenState extends State<DemoScreen> {
       height: 72,
       padding: EdgeInsets.all(8),
       decoration: BoxDecoration(
-        color: backgroundColor,
+        color: Colors.white.withOpacity(0.2),
         shape: BoxShape.circle,
-        border: Border.all(color: Colors.white.withOpacity(0.8), width: 4),
-      ),
-      child: Center(
-        child: FittedBox(
-          fit: BoxFit.fitWidth,
-          child: Text(
-            text,
-            style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
-            textAlign: TextAlign.center,
-          ),
+        border: Border.all(
+          color: Colors.white.withOpacity(0.3),
+          width: 2,
         ),
       ),
     );

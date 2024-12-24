@@ -12,19 +12,21 @@ export '../controller/fortune_wheel_controller.dart';
 export 'fortune_wheel_child.dart';
 
 class FortuneWheel<T> extends StatefulWidget {
-  FortuneWheel(
-      {required this.controller,
-      this.turnsPerSecond = 8,
-      this.rotationTimeLowerBound = 2000,
-      this.rotationTimeUpperBound = 4000,
-      required this.children})
-      : assert(children.length > 1, 'List with at least two elements must be given');
+  const FortuneWheel({
+    required this.controller,
+    this.turnsPerSecond = 8,
+    this.rotationTimeLowerBound = 2000,
+    this.rotationTimeUpperBound = 4000,
+    required this.children,
+    this.onTapIndicator,
+  }) : assert(children.length > 1, 'List with at least two elements must be given');
 
   final FortuneWheelController<T> controller;
   final List<FortuneWheelChild<T>> children;
   final int turnsPerSecond;
   final int rotationTimeLowerBound;
   final int rotationTimeUpperBound;
+  final VoidCallback? onTapIndicator;
 
   @override
   _FortuneWheelState createState() => _FortuneWheelState();
@@ -113,6 +115,7 @@ class _FortuneWheelState extends State<FortuneWheel> with SingleTickerProviderSt
         wheelSize: size,
         animationController: _animationController,
         childCount: widget.children.length,
+        onTap: widget.onTapIndicator,
       );
 
   Widget _getSlices() {
