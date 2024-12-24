@@ -39,7 +39,7 @@ class WheelSlice extends StatelessWidget {
             top: size / 1.6,
             left: size / 2 - pieceWidth / 2,
             child: Container(
-              padding: EdgeInsets.all(4),
+              // padding: EdgeInsets.all(4),
               height: pieceHeight,
               width: pieceWidth,
               child: FittedBox(
