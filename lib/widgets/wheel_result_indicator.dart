@@ -78,7 +78,7 @@ class WheelResultIndicator extends StatelessWidget {
         width: indicatorSize,
         height: indicatorSize,
         child: SvgPicture.asset(
-          "assets/ic_rotate.svg",
+          "assets/icons/ic_rotate.svg",
         ),
       ),
     );
