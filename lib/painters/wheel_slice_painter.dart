@@ -6,13 +6,15 @@ class WheelSlicePainter extends CustomPainter {
   WheelSlicePainter({
     required this.divider,
     required this.number,
-    required this.color,
+    required this.fillColor,
     this.gapAngle = 0.05, // Default gap angle in radians
+    this.borderColor,
   });
 
   final int divider;
   final int number;
-  final Color? color;
+  final Color? fillColor;
+  final Color? borderColor;
   final double gapAngle; // Gap angle between slices
 
   Paint? currentPaint;
@@ -33,14 +35,14 @@ class WheelSlicePainter extends CustomPainter {
 
   void _initializeStroke() {
     currentPaint = Paint()
-      ..color = Colors.white.withOpacity(0.3)
+      ..color = borderColor ?? Colors.white.withOpacity(0.3)
       ..strokeWidth = 2
       ..style = PaintingStyle.stroke;
   }
 
   void _initializeFill() {
     currentPaint = Paint()
-      ..color = color != null ? color! : Color.lerp(Colors.red, Colors.orange, number / (divider - 1))!
+      ..color = fillColor != null ? fillColor! : Colors.transparent
       ..style = PaintingStyle.fill;
   }
 

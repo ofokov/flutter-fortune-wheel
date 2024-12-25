@@ -4,12 +4,24 @@ import 'package:flutter/material.dart';
 import 'package:fortune_wheel/painters/wheel_slice_painter.dart';
 import 'package:fortune_wheel/widgets/fortune_wheel.dart';
 
-class WheelSlice extends StatelessWidget {
-  WheelSlice({required this.index, required this.size, required this.fortuneWheelChildren});
+class WheelSlice<T> extends StatelessWidget {
+  WheelSlice({
+    required this.index,
+    required this.size,
+    required this.fortuneWheelChildren,
+    this.isSelected = false,
+    this.selectedBorderColor,
+    this.fillColor,
+    this.unselectedBorderColor,
+  });
 
   final int index;
   final double size;
   final List<FortuneWheelChild> fortuneWheelChildren;
+  final bool isSelected;
+  final Color? selectedBorderColor;
+  final Color? unselectedBorderColor;
+  final Color? fillColor;
 
   @override
   Widget build(BuildContext context) {
@@ -70,7 +82,10 @@ class WheelSlice extends StatelessWidget {
               painter: WheelSlicePainter(
                 divider: childCount,
                 number: index,
-                color: Colors.white.withOpacity(0.04),
+                borderColor: isSelected
+                    ? selectedBorderColor ?? Colors.white.withOpacity(0.3)
+                    : unselectedBorderColor ?? Colors.white.withOpacity(0.3),
+                fillColor: fillColor,
               ),
               size: Size(size, size),
             ),

@@ -16,11 +16,10 @@ class _DemoScreenState extends State<DemoScreen> {
   void initState() {
     fortuneWheelController.addListener(() {
       if (fortuneWheelController.value == null) return;
-
       setState(() {
         currentWheelChild = fortuneWheelController.value;
       });
-
+      print(currentWheelChild?.value);
       if (fortuneWheelController.isAnimating) return;
 
       if (fortuneWheelController.shouldStartAnimation) return;
@@ -54,22 +53,29 @@ class _DemoScreenState extends State<DemoScreen> {
                   width: 350,
                   height: 350,
                   child: FortuneWheel<int>(
+                    fillColor: Colors.green.withOpacity(0.4),
+                    selectedBorderColor: Colors.blue,
+                    unselectedBorderColor: Colors.yellow,
+                    turnsPerSecond: 2,
+                    rotationTimeLowerBound: 5000,
+                    rotationTimeUpperBound: 10000,
+                    // excludedIndices: const [0, 1, 2, 3, 4, 5, 6, 7, 8],
                     controller: fortuneWheelController,
                     onTapIndicator: () {
                       fortuneWheelController.rotateTheWheel();
                     },
                     children: [
-                      _createFortuneWheelChild(-50),
-                      _createFortuneWheelChild(1000),
-                      _createFortuneWheelChild(-50),
-                      _createFortuneWheelChild(-500),
-                      _createFortuneWheelChild(1000),
-                      _createFortuneWheelChild(-100),
-                      _createFortuneWheelChild(-100),
-                      _createFortuneWheelChild(100),
-                      _createFortuneWheelChild(-100),
-                      _createFortuneWheelChild(1000),
-                      _createFortuneWheelChild(-100),
+                      _createFortuneWheelChild(1),
+                      _createFortuneWheelChild(2),
+                      _createFortuneWheelChild(3),
+                      _createFortuneWheelChild(4),
+                      _createFortuneWheelChild(5),
+                      _createFortuneWheelChild(6),
+                      _createFortuneWheelChild(7),
+                      _createFortuneWheelChild(8),
+                      _createFortuneWheelChild(9),
+                      _createFortuneWheelChild(10),
+                      _createFortuneWheelChild(11),
                     ],
                   ),
                 ),
@@ -108,10 +114,10 @@ class _DemoScreenState extends State<DemoScreen> {
       height: 72,
       padding: EdgeInsets.all(8),
       decoration: BoxDecoration(
-        color: Colors.white.withOpacity(0.2),
+        color: Colors.red.withOpacity(0.2),
         shape: BoxShape.circle,
         border: Border.all(
-          color: Colors.white.withOpacity(0.3),
+          color: Colors.red.withOpacity(0.8),
           width: 2,
         ),
       ),

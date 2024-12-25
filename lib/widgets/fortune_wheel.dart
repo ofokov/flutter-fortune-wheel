@@ -1,7 +1,6 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:fortune_wheel/widgets/wheel_result_indicator.dart';
 import 'package:fortune_wheel/widgets/wheel_slice.dart';
 
@@ -19,6 +18,10 @@ class FortuneWheel<T> extends StatefulWidget {
     this.rotationTimeUpperBound = 4000,
     required this.children,
     this.onTapIndicator,
+    this.excludedIndices = const [],
+    this.selectedBorderColor,
+    this.unselectedBorderColor,
+    this.fillColor,
   }) : assert(children.length > 1, 'List with at least two elements must be given');
 
   final FortuneWheelController<T> controller;
@@ -27,6 +30,10 @@ class FortuneWheel<T> extends StatefulWidget {
   final int rotationTimeLowerBound;
   final int rotationTimeUpperBound;
   final VoidCallback? onTapIndicator;
+  final List<int> excludedIndices;
+  final Color? selectedBorderColor;
+  final Color? unselectedBorderColor;
+  final Color? fillColor;
 
   @override
   _FortuneWheelState createState() => _FortuneWheelState();
@@ -75,10 +82,15 @@ class _FortuneWheelState extends State<FortuneWheel> with SingleTickerProviderSt
 
   void _startAnimation() {
     widget.controller.animationStarted();
-
-    int milliseconds = Random().nextInt(widget.rotationTimeLowerBound) +
-        (widget.rotationTimeUpperBound - widget.rotationTimeLowerBound);
-    double rotateDistance = milliseconds / 1000 * widget.turnsPerSecond;
+    int milliseconds;
+    double rotateDistance;
+    do {
+      milliseconds = Random().nextInt(widget.rotationTimeLowerBound) +
+          (widget.rotationTimeUpperBound - widget.rotationTimeLowerBound);
+      rotateDistance = milliseconds / 1000 * widget.turnsPerSecond;
+    } while (widget.excludedIndices.contains(
+      ((widget.children.length) * ((_animationController.value + rotateDistance) % 1)).floor(),
+    ));
 
     _animationController.value = _animationController.value % 1;
 
@@ -121,7 +133,7 @@ class _FortuneWheelState extends State<FortuneWheel> with SingleTickerProviderSt
   Widget _getSlices() {
     double fourthCircleAngle = pi / 2;
     double pieceAngle = pi * 2 / widget.children.length;
-
+    print((_animationController.value % 1) * widget.children.length);
     return Stack(
       children: [
         for (int index = 0; index < widget.children.length; index++)
@@ -131,6 +143,10 @@ class _FortuneWheelState extends State<FortuneWheel> with SingleTickerProviderSt
               index: index,
               size: size,
               fortuneWheelChildren: widget.children,
+              isSelected: ((_animationController.value % 1) * widget.children.length).floor() == index,
+              selectedBorderColor: widget.selectedBorderColor,
+              unselectedBorderColor: widget.unselectedBorderColor,
+              fillColor: widget.fillColor,
             ),
           ),
       ],
