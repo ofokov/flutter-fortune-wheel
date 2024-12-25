@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:fortune_wheel/widgets/wheel_result_indicator.dart';
 import 'package:fortune_wheel/widgets/wheel_slice.dart';
+import 'package:vibration/vibration.dart';
 
 import '../controller/fortune_wheel_controller.dart';
 import 'fortune_wheel_child.dart';
@@ -22,6 +23,7 @@ class FortuneWheel<T> extends StatefulWidget {
     this.selectedBorderColor,
     this.unselectedBorderColor,
     this.fillColor,
+    this.hasVibration = true,
   }) : assert(children.length > 1, 'List with at least two elements must be given');
 
   final FortuneWheelController<T> controller;
@@ -33,6 +35,7 @@ class FortuneWheel<T> extends StatefulWidget {
   final List<int> excludedIndices;
   final Color? selectedBorderColor;
   final Color? unselectedBorderColor;
+  final bool hasVibration;
   final Color? fillColor;
 
   @override
@@ -42,6 +45,7 @@ class FortuneWheel<T> extends StatefulWidget {
 class _FortuneWheelState extends State<FortuneWheel> with SingleTickerProviderStateMixin {
   late AnimationController _animationController;
   late double size;
+  int? lastIndex;
 
   @override
   void dispose() {
@@ -62,7 +66,17 @@ class _FortuneWheelState extends State<FortuneWheel> with SingleTickerProviderSt
 
     _animationController.value = (0.5 / (widget.children.length));
 
-    _animationController.addListener(() {
+    _animationController.addListener(() async {
+      int currentIndex = ((_animationController.value % 1) * widget.children.length).floor();
+
+      if (widget.hasVibration && currentIndex != lastIndex) {
+        lastIndex = currentIndex;
+
+        if (await Vibration.hasVibrator() == true) {
+          Vibration.vibrate(duration: 20);
+        }
+      }
+
       widget.controller
           .setValue(widget.children[((widget.children.length) * (_animationController.value % 1)).floor()]);
 

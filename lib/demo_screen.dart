@@ -57,9 +57,9 @@ class _DemoScreenState extends State<DemoScreen> {
                     selectedBorderColor: Colors.blue,
                     unselectedBorderColor: Colors.yellow,
                     turnsPerSecond: 2,
-                    rotationTimeLowerBound: 5000,
-                    rotationTimeUpperBound: 10000,
-                    // excludedIndices: const [0, 1, 2, 3, 4, 5, 6, 7, 8],
+                    rotationTimeLowerBound: 2000,
+                    rotationTimeUpperBound: 4000,
+                    excludedIndices: const [0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
                     controller: fortuneWheelController,
                     onTapIndicator: () {
                       fortuneWheelController.rotateTheWheel();
