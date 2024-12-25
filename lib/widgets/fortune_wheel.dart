@@ -147,7 +147,6 @@ class _FortuneWheelState extends State<FortuneWheel> with SingleTickerProviderSt
   Widget _getSlices() {
     double fourthCircleAngle = pi / 2;
     double pieceAngle = pi * 2 / widget.children.length;
-    print((_animationController.value % 1) * widget.children.length);
     return Stack(
       children: [
         for (int index = 0; index < widget.children.length; index++)

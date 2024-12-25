@@ -19,7 +19,6 @@ class _DemoScreenState extends State<DemoScreen> {
       setState(() {
         currentWheelChild = fortuneWheelController.value;
       });
-      print(currentWheelChild?.value);
       if (fortuneWheelController.isAnimating) return;
 
       if (fortuneWheelController.shouldStartAnimation) return;
