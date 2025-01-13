@@ -1,0 +1,2 @@
+C:/Dart projects/work/flutter-fortune-wheel/android/app/.cxx/Debug/5k625v3u/x86/CMakeFiles/edit_cache.dir
+C:/Dart projects/work/flutter-fortune-wheel/android/app/.cxx/Debug/5k625v3u/x86/CMakeFiles/rebuild_cache.dir
