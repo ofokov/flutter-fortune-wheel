@@ -82,10 +82,10 @@ class WheelSlice<T> extends StatelessWidget {
               painter: WheelSlicePainter(
                 divider: childCount,
                 number: index,
-                borderColor: isSelected
-                    ? selectedBorderColor ?? Colors.white.withOpacity(0.3)
-                    : unselectedBorderColor ?? Colors.white.withOpacity(0.3),
                 fillColor: fillColor,
+                isSelected: isSelected,
+                selectedBorderColor: selectedBorderColor ?? Colors.white.withOpacity(0.3),
+                unselectedBorderColor: unselectedBorderColor ?? Colors.white.withOpacity(0.3),
               ),
               size: Size(size, size),
             ),
