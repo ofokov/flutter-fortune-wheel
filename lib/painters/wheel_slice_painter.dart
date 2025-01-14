@@ -7,7 +7,7 @@ class WheelSlicePainter extends CustomPainter {
     required this.divider,
     required this.number,
     required this.fillColor,
-    this.gapAngle = 0.05, // Default gap angle in radians
+    this.gapAngle = 0.06, // Default gap angle in radians
     this.borderColor,
   });
 
@@ -51,10 +51,9 @@ class WheelSlicePainter extends CustomPainter {
     final innerRadius = radius * 0.5;
     const double borderRadius = 10;
 
-    // Define paths for the outer and inner arcs
     Path borderPath = Path()
       ..moveTo(
-        size.width / 2 + innerRadius * cos(gapAngle / 2),
+        size.width / 2 + innerRadius * cos(gapAngle / 2) + borderRadius,
         size.height / 2 + innerRadius * sin(gapAngle / 2),
       )
       ..lineTo(
@@ -82,14 +81,30 @@ class WheelSlicePainter extends CustomPainter {
         radius: Radius.circular(borderRadius),
       )
       ..lineTo(
-        size.width / 2 + innerRadius * cos(angleWidth + gapAngle / 2),
-        size.height / 2 + innerRadius * sin(angleWidth + gapAngle / 2),
+        size.width / 2 + innerRadius * cos(angleWidth + gapAngle / 2) + borderRadius * sin(angleWidth + gapAngle / 2),
+        size.height / 2 + innerRadius * sin(angleWidth + gapAngle / 2) + borderRadius * sin(angleWidth - gapAngle / 2),
+      )
+      ..arcToPoint(
+        Offset(
+          size.width / 2 + innerRadius * cos(angleWidth + gapAngle / 2) + borderRadius * sin(angleWidth - gapAngle / 2),
+          size.height / 2 +
+              innerRadius * sin(angleWidth + gapAngle / 2) -
+              borderRadius * cos(angleWidth + gapAngle / 2),
+        ),
+        radius: Radius.circular(borderRadius),
       )
       ..arcTo(
         Rect.fromCircle(center: Offset(size.width / 2, size.height / 2), radius: innerRadius),
-        angleWidth + gapAngle / 2,
-        -angleWidth,
+        angleWidth + gapAngle / 2 - borderRadius / radius,
+        -angleWidth + 2 * borderRadius / radius,
         false,
+      )
+      ..arcToPoint(
+        Offset(
+          size.width / 2 + innerRadius * cos(gapAngle / 2) + borderRadius,
+          size.height / 2 + innerRadius * sin(gapAngle / 2),
+        ),
+        radius: Radius.circular(borderRadius),
       )
       ..close();
 
@@ -137,7 +152,7 @@ class WheelSlicePainter extends CustomPainter {
 
     Path borderPath = Path()
       ..moveTo(
-        size.width / 2 + innerRadius * cos(gapAngle / 2),
+        size.width / 2 + innerRadius * cos(gapAngle / 2) + borderRadius,
         size.height / 2 + innerRadius * sin(gapAngle / 2),
       )
       ..lineTo(
@@ -165,14 +180,30 @@ class WheelSlicePainter extends CustomPainter {
         radius: Radius.circular(borderRadius),
       )
       ..lineTo(
-        size.width / 2 + innerRadius * cos(angleWidth + gapAngle / 2),
-        size.height / 2 + innerRadius * sin(angleWidth + gapAngle / 2),
+        size.width / 2 + innerRadius * cos(angleWidth + gapAngle / 2) + borderRadius * sin(angleWidth + gapAngle / 2),
+        size.height / 2 + innerRadius * sin(angleWidth + gapAngle / 2) + borderRadius * sin(angleWidth - gapAngle / 2),
+      )
+      ..arcToPoint(
+        Offset(
+          size.width / 2 + innerRadius * cos(angleWidth + gapAngle / 2) + borderRadius * sin(angleWidth - gapAngle / 2),
+          size.height / 2 +
+              innerRadius * sin(angleWidth + gapAngle / 2) -
+              borderRadius * cos(angleWidth + gapAngle / 2),
+        ),
+        radius: Radius.circular(borderRadius),
       )
       ..arcTo(
         Rect.fromCircle(center: Offset(size.width / 2, size.height / 2), radius: innerRadius),
-        angleWidth + gapAngle / 2,
-        -angleWidth,
+        angleWidth + gapAngle / 2 - borderRadius / radius,
+        -angleWidth + 2 * borderRadius / radius,
         false,
+      )
+      ..arcToPoint(
+        Offset(
+          size.width / 2 + innerRadius * cos(gapAngle / 2) + borderRadius,
+          size.height / 2 + innerRadius * sin(gapAngle / 2),
+        ),
+        radius: Radius.circular(borderRadius),
       )
       ..close();
 
