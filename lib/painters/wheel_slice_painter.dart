@@ -35,9 +35,19 @@ class WheelSlicePainter extends CustomPainter {
     // Paint the bottom border only
     _initializeStroke();
     _drawRoundedBottomBorder(canvas, size);
+
+    _initializeSelectedStroke();
+    _drawRoundedSelectedBorder(canvas, size);
   }
 
   void _initializeStroke() {
+    currentPaint = Paint()
+      ..color = unselectedBorderColor
+      ..strokeWidth = 2
+      ..style = PaintingStyle.stroke;
+  }
+
+  void _initializeSelectedStroke() {
     currentPaint = Paint()
       ..color = isSelected ? selectedBorderColor : unselectedBorderColor
       ..strokeWidth = 2
@@ -210,6 +220,42 @@ class WheelSlicePainter extends CustomPainter {
         radius: Radius.circular(borderRadius),
       )
       ..close();
+
+    canvas.drawPath(borderPath, currentPaint!);
+  }
+
+  void _drawRoundedSelectedBorder(Canvas canvas, Size size) {
+    final radius = size.width / 2;
+    final innerRadius = radius * 0.5;
+    const double borderRadius = 10;
+
+    Path borderPath = Path()
+      ..moveTo(
+        size.width / 2 + innerRadius * cos(angleWidth + gapAngle / 2) + borderRadius * sin(angleWidth + gapAngle / 2),
+        size.height / 2 + innerRadius * sin(angleWidth + gapAngle / 2) + borderRadius * sin(angleWidth - gapAngle / 2),
+      )
+      ..arcToPoint(
+        Offset(
+          size.width / 2 + innerRadius * cos(angleWidth + gapAngle / 2) + borderRadius * sin(angleWidth - gapAngle / 2),
+          size.height / 2 +
+              innerRadius * sin(angleWidth + gapAngle / 2) -
+              borderRadius * cos(angleWidth + gapAngle / 2),
+        ),
+        radius: Radius.circular(borderRadius),
+      )
+      ..arcTo(
+        Rect.fromCircle(center: Offset(size.width / 2, size.height / 2), radius: innerRadius),
+        angleWidth + gapAngle / 2 - borderRadius / radius,
+        -angleWidth + 2 * borderRadius / radius,
+        false,
+      )
+      ..arcToPoint(
+        Offset(
+          size.width / 2 + innerRadius * cos(gapAngle / 2) + borderRadius,
+          size.height / 2 + innerRadius * sin(gapAngle / 2),
+        ),
+        radius: Radius.circular(borderRadius),
+      );
 
     canvas.drawPath(borderPath, currentPaint!);
   }
