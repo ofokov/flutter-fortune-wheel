@@ -1,9 +1,9 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:fortune_wheel/widgets/wheel_result_indicator.dart';
 import 'package:fortune_wheel/widgets/wheel_slice.dart';
-import 'package:vibration/vibration.dart';
 
 import '../controller/fortune_wheel_controller.dart';
 import 'fortune_wheel_child.dart';
@@ -14,21 +14,26 @@ export 'fortune_wheel_child.dart';
 class FortuneWheel<T> extends StatefulWidget {
   const FortuneWheel({
     required this.controller,
-    this.turnsPerSecond = 8,
+    required this.children,
+    this.turnSpeed = 4,
     this.rotationTimeLowerBound = 2000,
     this.rotationTimeUpperBound = 4000,
-    required this.children,
     this.onTapIndicator,
     this.excludedIndices = const [],
     this.selectedBorderColor,
     this.unselectedBorderColor,
     this.fillColor,
     this.hasVibration = true,
-  }) : assert(children.length > 1, 'List with at least two elements must be given');
+    this.canTap = true,
+  })  : assert(children.length > 1, 'List with at least two elements must be given'),
+        assert(
+            children.length > excludedIndices.length,
+            'Not valid length of excluded indices. The length of children'
+            ' is less than or equal to of the length excluded indices.');
 
   final FortuneWheelController<T> controller;
   final List<FortuneWheelChild<T>> children;
-  final int turnsPerSecond;
+  final double turnSpeed;
   final int rotationTimeLowerBound;
   final int rotationTimeUpperBound;
   final VoidCallback? onTapIndicator;
@@ -36,6 +41,7 @@ class FortuneWheel<T> extends StatefulWidget {
   final Color? selectedBorderColor;
   final Color? unselectedBorderColor;
   final bool hasVibration;
+  final bool canTap;
   final Color? fillColor;
 
   @override
@@ -72,9 +78,7 @@ class _FortuneWheelState extends State<FortuneWheel> with SingleTickerProviderSt
       if (widget.hasVibration && currentIndex != lastIndex) {
         lastIndex = currentIndex;
 
-        if (await Vibration.hasVibrator() == true) {
-          Vibration.vibrate(duration: 20);
-        }
+        HapticFeedback.lightImpact();
       }
 
       widget.controller
@@ -101,7 +105,7 @@ class _FortuneWheelState extends State<FortuneWheel> with SingleTickerProviderSt
     do {
       milliseconds = Random().nextInt(widget.rotationTimeLowerBound) +
           (widget.rotationTimeUpperBound - widget.rotationTimeLowerBound);
-      rotateDistance = milliseconds / 1000 * widget.turnsPerSecond;
+      rotateDistance = (milliseconds / 1000.0 * widget.turnSpeed);
     } while (widget.excludedIndices.contains(
       ((widget.children.length) * ((_animationController.value + rotateDistance) % 1)).floor(),
     ));
@@ -110,7 +114,7 @@ class _FortuneWheelState extends State<FortuneWheel> with SingleTickerProviderSt
 
     _animationController.duration = Duration(milliseconds: milliseconds.toInt());
 
-    _animationController.animateTo(_animationController.value + rotateDistance, curve: Curves.easeInOut);
+    _animationController.animateTo(_animationController.value + rotateDistance, curve: Curves.ease);
   }
 
   @override
@@ -142,6 +146,7 @@ class _FortuneWheelState extends State<FortuneWheel> with SingleTickerProviderSt
         animationController: _animationController,
         childCount: widget.children.length,
         onTap: widget.onTapIndicator,
+        canTap: widget.canTap,
       );
 
   Widget _getSlices() {

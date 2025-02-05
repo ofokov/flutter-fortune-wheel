@@ -52,12 +52,13 @@ class _DemoScreenState extends State<DemoScreen> {
                   width: 350,
                   height: 350,
                   child: FortuneWheel<int>(
+                    canTap: true,
                     fillColor: Colors.green.withOpacity(0.4),
                     selectedBorderColor: Colors.blue,
                     unselectedBorderColor: Colors.yellow,
-                    turnsPerSecond: 2,
-                    rotationTimeLowerBound: 2000,
-                    rotationTimeUpperBound: 4000,
+                    turnSpeed: 1.4,
+                    rotationTimeLowerBound: 3000,
+                    rotationTimeUpperBound: 6000,
                     excludedIndices: const [0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
                     controller: fortuneWheelController,
                     onTapIndicator: () {

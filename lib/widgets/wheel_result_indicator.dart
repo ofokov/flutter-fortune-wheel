@@ -5,16 +5,18 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:fortune_wheel/painters/triangle_painter.dart';
 
 class WheelResultIndicator extends StatelessWidget {
-  WheelResultIndicator({
+  const WheelResultIndicator({
     required this.wheelSize,
     required this.animationController,
     required this.childCount,
+    this.canTap = true,
     this.onTap,
   });
 
   final double wheelSize;
   final VoidCallback? onTap;
   final AnimationController animationController;
+  final bool canTap;
   final int childCount;
 
   @override
@@ -24,7 +26,7 @@ class WheelResultIndicator extends StatelessWidget {
 
     return GestureDetector(
       behavior: HitTestBehavior.opaque,
-      onTap: onTap,
+      onTap: canTap ? onTap : () {},
       child: Stack(
         children: [
           _getCenterIndicatorTriangle(wheelSize, indicatorSize * .75, Colors.white),
@@ -45,10 +47,11 @@ class WheelResultIndicator extends StatelessWidget {
             origin: Offset(0, indicatorSize / 2),
             angle: (animationController.value * pi * 2) - (pi / (childCount)),
             child: CustomPaint(
-                painter: TrianglePainter(
-                  fillColor: indicatorColor,
-                ),
-                size: Size(indicatorSize, indicatorSize)),
+              painter: TrianglePainter(
+                fillColor: indicatorColor,
+              ),
+              size: Size(indicatorSize, indicatorSize),
+            ),
           );
         },
       ),
